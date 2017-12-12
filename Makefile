@@ -71,6 +71,10 @@ $(OBJDIR)/$(TARGET).elf: $(OBJS) | Makefile
 	@echo
 
 
+#@echo here SRCDIR: $(SRCDIR)...
+#@echo here SRCS: $(SRCS)...
+#@echo here OBJS: $(OBJS)...
+#$(SZ) $@
 
 # Redefine defaults to generate dependencies
 %.o: %.c
@@ -81,14 +85,10 @@ $(OBJDIR)/$(TARGET).elf: $(OBJS) | Makefile
 
 # Goals for object files based on c-files with dependencies on headers
 $(OBJDIR)/%.o: %.c $(DEPDIR)/%.d
-	@echo here SRCDIR: $(SRCDIR)...
-	@echo here SRCS: $(SRCS)...
-	@echo here OBJS: $(OBJS)...
-	@echo $(patsubst %,$(DEPDIR)/%.d,$(basename $(SOURCES)))
+	@echo $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS)))
 	@echo Compiling: $(notdir $@)...
 	$(COMPILE.c) $(OUTPUT_OPTION) $<
 	$(POSTCOMPILE)
-	$(SZ) $@
 	@echo
 
 main.c: main.h
@@ -103,7 +103,7 @@ $(OBJDIR)/%.o: %.s
 	@echo
 
 # Include dependencies for *.o goals
--include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SOURCES))))
+-include $(wildcard $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS))))
 
 # Guarantee that *.o files will be generated even when %.d files were not yet created
 $(DEPDIR)/%.d: ;
